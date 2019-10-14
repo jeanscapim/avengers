@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -36,7 +37,6 @@ public class CharacterController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     public ResponseEntity<Optional<CharacterResponseDto>> create(@RequestBody @Valid final CharacterRequestDto saleRequestDto) {
-
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(characterMapper
                         .serializeToDto(characterBusiness
@@ -53,12 +53,11 @@ public class CharacterController {
             @ApiResponse(code = 204, message = "No Content"),
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
-    public ResponseEntity<Optional<CharacterResponseDto>> read(@PathVariable final Integer id) {
-
+    public ResponseEntity<Optional<List<CharacterResponseDto>>> read(@PathVariable final Integer id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(characterMapper
-                        .serializeToDto(characterBusiness.read()));
+                        .serializeListToDto(characterBusiness.read()));
     }
 
     @PutMapping
@@ -71,7 +70,6 @@ public class CharacterController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     public ResponseEntity<Optional<CharacterResponseDto>> update(@RequestBody @Valid final CharacterRequestDto saleRequestDto) {
-
         return ResponseEntity.status(HttpStatus.OK)
                 .body(characterMapper
                         .serializeToDto(characterBusiness
@@ -88,12 +86,9 @@ public class CharacterController {
             @ApiResponse(code = 204, message = "No Content"),
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
-    public ResponseEntity<Optional<CharacterResponseDto>> delete(@PathVariable final Integer id) {
-
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(characterMapper
-                        .serializeToDto(characterBusiness.delete(id)));
+    public ResponseEntity<Void> delete(@PathVariable final Integer id) {
+        characterBusiness.delete(id);
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -106,7 +101,6 @@ public class CharacterController {
             @ApiResponse(code = 404, message = "Not Found"),
             @ApiResponse(code = 500, message = "Internal Server Error")})
     public ResponseEntity<Optional<CharacterResponseDto>> findById(@PathVariable final Integer id) {
-
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(characterMapper
