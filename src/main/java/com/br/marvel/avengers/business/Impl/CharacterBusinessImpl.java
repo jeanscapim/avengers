@@ -27,6 +27,9 @@ public class CharacterBusinessImpl implements CharacterBusiness {
 
     @Override
     public Optional<Character> update(@NonNull Character character) {
+        characterRepository.findById(character.getId())
+                .orElseThrow(CharacterNotFoundException::new);
+
         return Optional.of(characterRepository.saveAndFlush(character));
     }
 
